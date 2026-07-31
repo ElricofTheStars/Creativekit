@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "creativekitplus",
+  "version": "${version}",
+  "name": "CreativeKit Plus",
+  "description": "Client-side single-player creative/testing utilities.",
+  "authors": ["Elric"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.example.creativekitplus.CreativeKitPlusClient"
+    ]
+  },
+  "mixins": [
+    "creativekitplus.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
