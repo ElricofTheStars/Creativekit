@@ -6,20 +6,20 @@ Client-side Fabric utility mod for **single-player creative building and testing
 
 | Module           | Key | What it does                                              |
 |------------------|-----|----------------------------------------------------------|
-| Flight           | F   | Velocity-driven flight (jump/sneak = up/down)            |
+| Flight           | V   | Velocity-driven flight (jump/sneak = up/down)            |
 | X-Ray            | X   | Hides everything except the ore allow-list               |
 | Entity Highlight | H   | Forces a glow outline on living mobs                     |
-| Auto Tool        | T   | Swaps hotbar to the fastest tool while mining            |
+| Auto Tool        | Y   | Swaps hotbar to the fastest tool while mining            |
 | No-Clip          | N   | Phase through blocks (pair with Flight)                  |
 | Speed            | G   | Horizontal movement multiplier                          |
 | Full Bright      | B   | Max brightness without a potion                         |
-| **Click GUI**    | Right Shift | Panel to toggle modules and change settings     |
+| **Click GUI**    | R   | Panel to toggle modules and change settings     |
 
 Rebind any of these in **Options > Controls > CreativeKit Plus**. Toggle state shows on the action bar.
 
 ## Click GUI
 
-Press **Right Shift** to open the panel. Left-click a module row to toggle it (green = on, red = off). Flight and Speed have a numeric setting adjustable with the `[-]` / `[+]` buttons. Right Shift or Escape closes it and saves. The world keeps running while it's open.
+Press **R** to open the panel. Left-click a module row to toggle it (green = on, red = off). Flight and Speed have a numeric setting adjustable with the `[-]` / `[+]` buttons. R or Escape closes it and saves. The world keeps running while it's open.
 
 ## Build
 

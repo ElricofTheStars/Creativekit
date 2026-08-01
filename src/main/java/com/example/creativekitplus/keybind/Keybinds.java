@@ -34,14 +34,14 @@ public final class Keybinds {
     private Keybinds() {}
 
     public static void register() {
-        flightKey     = bind("flight",     GLFW.GLFW_KEY_F);
+        flightKey     = bind("flight",     GLFW.GLFW_KEY_V);  // F collides with swap-hand
         xrayKey       = bind("xray",       GLFW.GLFW_KEY_X);
         highlightKey  = bind("highlight",  GLFW.GLFW_KEY_H);
-        autoToolKey   = bind("autotool",   GLFW.GLFW_KEY_T);
+        autoToolKey   = bind("autotool",   GLFW.GLFW_KEY_Y);  // T collides with chat
         noClipKey     = bind("noclip",     GLFW.GLFW_KEY_N);
         speedKey      = bind("speed",      GLFW.GLFW_KEY_G);
         fullBrightKey = bind("fullbright", GLFW.GLFW_KEY_B);
-        openGuiKey    = bind("gui",        GLFW.GLFW_KEY_RIGHT_SHIFT);
+        openGuiKey    = bind("gui",        GLFW.GLFW_KEY_R);  // Right Shift is an unreliable modifier
     }
 
     private static KeyBinding bind(String id, int glfwKey) {
