@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -17,7 +18,9 @@ import org.lwjgl.glfw.GLFW;
  */
 public final class Keybinds {
 
-    private static final String CATEGORY = "key.category.creativekitplus";
+    // 1.21.11 replaced the String category with a KeyBinding.Category record.
+    private static final KeyBinding.Category CATEGORY =
+            KeyBinding.Category.create(Identifier.of("creativekitplus", "main"));
 
     private static KeyBinding flightKey;
     private static KeyBinding xrayKey;

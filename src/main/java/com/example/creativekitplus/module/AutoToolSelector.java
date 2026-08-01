@@ -33,7 +33,7 @@ public final class AutoToolSelector extends AbstractModule {
         BlockState state = client.world.getBlockState(pos);
         if (state.isAir()) return;
 
-        int bestSlot = player.getInventory().selectedSlot;
+        int bestSlot = player.getInventory().getSelectedSlot();
         float bestSpeed = miningSpeed(player.getInventory().getStack(bestSlot), state);
 
         for (int slot = 0; slot < 9; slot++) {
@@ -46,8 +46,8 @@ public final class AutoToolSelector extends AbstractModule {
             }
         }
 
-        if (bestSlot != player.getInventory().selectedSlot) {
-            player.getInventory().selectedSlot = bestSlot;
+        if (bestSlot != player.getInventory().getSelectedSlot()) {
+            player.getInventory().setSelectedSlot(bestSlot);
         }
     }
 
