@@ -12,15 +12,13 @@ import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * Registers toggle keys and routes presses to the matching module. All binds
- * default to unbound-friendly keys under the "CreativeKit Plus" category and
- * can be rebound in Options > Controls.
+ * Registers toggle keys and routes presses to the matching module. Each bind is
+ * independent and null-guarded so one failure can't break the rest or the tick
+ * handler. Keys are rebindable in Options > Controls under "CreativeKit Plus".
  */
 public final class Keybinds {
 
-    // 1.21.11 replaced the String category with a KeyBinding.Category record.
-    private static final KeyBinding.Category CATEGORY =
-            KeyBinding.Category.create(Identifier.of("creativekitplus", "main"));
+    private static KeyBinding.Category category;
 
     private static KeyBinding flightKey;
     private static KeyBinding xrayKey;
@@ -33,46 +31,67 @@ public final class Keybinds {
 
     private Keybinds() {}
 
+    private static void log(String msg) {
+        System.out.println("[CreativeKitPlus] " + msg);
+    }
+
     public static void register() {
-        flightKey     = bind("flight",     GLFW.GLFW_KEY_V);  // F collides with swap-hand
+        // 1.21.11 requires a KeyBinding.Category built from an Identifier.
+        category = KeyBinding.Category.create(Identifier.of("creativekitplus", "main"));
+
+        flightKey     = bind("flight",     GLFW.GLFW_KEY_V);
         xrayKey       = bind("xray",       GLFW.GLFW_KEY_X);
         highlightKey  = bind("highlight",  GLFW.GLFW_KEY_H);
-        autoToolKey   = bind("autotool",   GLFW.GLFW_KEY_Y);  // T collides with chat
+        autoToolKey   = bind("autotool",   GLFW.GLFW_KEY_Y);
         noClipKey     = bind("noclip",     GLFW.GLFW_KEY_N);
         speedKey      = bind("speed",      GLFW.GLFW_KEY_G);
         fullBrightKey = bind("fullbright", GLFW.GLFW_KEY_B);
-        openGuiKey    = bind("gui",        GLFW.GLFW_KEY_R);  // Right Shift is an unreliable modifier
+        openGuiKey    = bind("gui",        GLFW.GLFW_KEY_R);
     }
 
     private static KeyBinding bind(String id, int glfwKey) {
-        return KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        KeyBinding kb = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.creativekitplus." + id,
                 InputUtil.Type.KEYSYM,
                 glfwKey,
-                CATEGORY));
+                category));
+        log("bound key '" + id + "'");
+        return kb;
     }
 
-    /** Call once per client tick. Consumes queued presses so a hold = one toggle. */
-    public static void handleToggles(MinecraftClient client, ModuleManager mm) {
-        if (flightKey.wasPressed())     announce(client, mm, mm.flight());
-        if (xrayKey.wasPressed())       announce(client, mm, mm.xray());
-        if (highlightKey.wasPressed())  announce(client, mm, mm.highlighter());
-        if (autoToolKey.wasPressed())   announce(client, mm, mm.autoTool());
-        if (noClipKey.wasPressed())     announce(client, mm, mm.noClip());
-        if (speedKey.wasPressed())      announce(client, mm, mm.speed());
-        if (fullBrightKey.wasPressed()) announce(client, mm, mm.fullBright());
+    public static int count() {
+        int n = 0;
+        for (KeyBinding k : new KeyBinding[]{flightKey, xrayKey, highlightKey,
+                autoToolKey, noClipKey, speedKey, fullBrightKey, openGuiKey}) {
+            if (k != null) n++;
+        }
+        return n;
+    }
 
-        if (openGuiKey.wasPressed() && client.currentScreen == null) {
-            client.setScreen(new ClickGuiScreen(mm));
+    /** Called once per client tick. Each check is independent and null-safe. */
+    public static void handleToggles(MinecraftClient client, ModuleManager mm) {
+        if (flightKey != null     && flightKey.wasPressed())     announce(client, mm, mm.flight());
+        if (xrayKey != null       && xrayKey.wasPressed())       announce(client, mm, mm.xray());
+        if (highlightKey != null  && highlightKey.wasPressed())  announce(client, mm, mm.highlighter());
+        if (autoToolKey != null   && autoToolKey.wasPressed())   announce(client, mm, mm.autoTool());
+        if (noClipKey != null     && noClipKey.wasPressed())     announce(client, mm, mm.noClip());
+        if (speedKey != null      && speedKey.wasPressed())      announce(client, mm, mm.speed());
+        if (fullBrightKey != null && fullBrightKey.wasPressed()) announce(client, mm, mm.fullBright());
+
+        if (openGuiKey != null && openGuiKey.wasPressed()) {
+            log("GUI key pressed");
+            if (client.currentScreen == null) {
+                client.setScreen(new ClickGuiScreen(mm));
+            }
         }
     }
 
     private static void announce(MinecraftClient client, ModuleManager mm, Module m) {
         boolean on = mm.toggle(m);
+        log("toggled " + m.getName() + " -> " + (on ? "ON" : "OFF"));
         if (client.player != null) {
             client.player.sendMessage(
-                    Text.literal("[CKP] " + m.getName() + ": " + (on ? "ON" : "OFF")),
-                    true /* actionbar */);
+                    Text.literal("[CKP] " + m.getName() + ": " + (on ? "ON" : "OFF")), true);
         }
     }
 }
